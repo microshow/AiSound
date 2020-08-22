@@ -1,7 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:padding="16dp">
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -153,7 +155,7 @@
 
                 <TextView
                     style="@style/AudioTextStyle"
-                    android:text="搞怪2" />
+                    android:text="合唱团" />
             </LinearLayout>
 
             <LinearLayout
@@ -171,11 +173,21 @@
 
                 <TextView
                     style="@style/AudioTextStyle"
-                    android:text="空灵2" />
+                    android:text="颤音" />
             </LinearLayout>
 
 
         </LinearLayout>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:onClick="clickFix"
+        android:text="保存"
+        tools:ignore="HardcodedText" />
 
 </RelativeLayout>

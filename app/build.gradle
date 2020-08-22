@@ -40,6 +40,9 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
 
+    //动态权限
+    api 'com.github.tbruyelle:rxpermissions:0.10.2'
+
     implementation project(':aisound')
 
 }

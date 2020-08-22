@@ -32,10 +32,12 @@ extern "C" JNIEXPORT jint JNICALL Java_io_microshow_aisound_AiSound_saveSound
     float frequency;
     bool isPlaying = true;
 
+    int code = 0;
+
     JNIEnv *mEnv;
 
     System_Create(&system);
-    system->setSoftwareFormat(8000, FMOD_SPEAKERMODE_MONO, 0); //设置采样率为8000，channel为1
+    system->setSoftwareFormat(44100, FMOD_SPEAKERMODE_STEREO, 0); //设置采样率为44100，channel为2
     mEnv = env;
     const char *path_cstr = mEnv->GetStringUTFChars(path_jstr, NULL);//输入音频路径
     const char *path_cstr2 = mEnv->GetStringUTFChars(path2_jstr, NULL);//输出音频路径
@@ -51,50 +53,60 @@ extern "C" JNIEXPORT jint JNICALL Java_io_microshow_aisound_AiSound_saveSound
     try {
         //创建声音
         system->createSound(path_cstr, FMOD_DEFAULT, NULL, &sound);
-        system->playSound(sound, 0, false, &channel);
         switch (type) {
             case TYPE_NORMAL:
                 LOGI("%s", path_cstr);
                 LOGI("%s", "fix normal");
+                system->playSound(sound, 0, false, &channel);
                 break;
             case TYPE_LOLITA:
-                system->createDSPByType(FMOD_DSP_TYPE_NORMALIZE, &dsp);
-                channel->getFrequency(&frequency);
-                frequency = frequency * 1.6;
-                channel->setFrequency(frequency);
+                system->createDSPByType(FMOD_DSP_TYPE_PITCHSHIFT, &dsp);    // 可改变音调
+                dsp->setParameterFloat(FMOD_DSP_PITCHSHIFT_PITCH, 8.0);     // 8.0 为一个八度
+                system->playSound(sound, 0, false, &channel);
+                channel->addDSP(0, dsp);
                 break;
             case TYPE_UNCLE:
                 system->createDSPByType(FMOD_DSP_TYPE_PITCHSHIFT, &dsp);
                 dsp->setParameterFloat(FMOD_DSP_PITCHSHIFT_PITCH, 0.8);
+                system->playSound(sound, 0, false, &channel);
                 channel->addDSP(0, dsp);
                 break;
             case TYPE_THRILLER:
-                system->createDSPByType(FMOD_DSP_TYPE_PITCHSHIFT, &dsp);
-                dsp->setParameterFloat(FMOD_DSP_PITCHSHIFT_PITCH,
-                                       1.8);
+                system->createDSPByType(FMOD_DSP_TYPE_TREMOLO, &dsp);       //可改变颤音
+                dsp->setParameterFloat(FMOD_DSP_TREMOLO_SKEW, 5);           // 时间偏移低频振荡周期
+                system->playSound(sound, 0, false, &channel);
                 channel->addDSP(0, dsp);
                 break;
             case TYPE_FUNNY:
-                system->createDSPByType(FMOD_DSP_TYPE_ECHO, &dsp);
-                dsp->setParameterFloat(FMOD_DSP_ECHO_DELAY, 50);
-                dsp->setParameterFloat(FMOD_DSP_ECHO_FEEDBACK, 60);
+                system->createDSPByType(FMOD_DSP_TYPE_NORMALIZE, &dsp);    //放大声音
+                system->playSound(sound, 0, false, &channel);
                 channel->addDSP(0, dsp);
+
+                channel->getFrequency(&frequency);
+                frequency = frequency * 2;                                  //频率*2
+                channel->setFrequency(frequency);
                 break;
             case TYPE_ETHEREAL:
-                system->createDSPByType(FMOD_DSP_TYPE_ECHO, &dsp);
-                dsp->setParameterFloat(FMOD_DSP_ECHO_DELAY, 300);
-                dsp->setParameterFloat(FMOD_DSP_ECHO_FEEDBACK, 20);
+                system->createDSPByType(FMOD_DSP_TYPE_ECHO, &dsp);          // 控制回声
+                dsp->setParameterFloat(FMOD_DSP_ECHO_DELAY, 300);           // 延时
+                dsp->setParameterFloat(FMOD_DSP_ECHO_FEEDBACK, 20);         // 回波衰减的延迟
+
+                system->playSound(sound, 0, false, &channel);
                 channel->addDSP(0, dsp);
+
                 break;
             case TYPE_CHORUS:
                 system->createDSPByType(FMOD_DSP_TYPE_ECHO, &dsp);
                 dsp->setParameterFloat(FMOD_DSP_ECHO_DELAY, 100);
                 dsp->setParameterFloat(FMOD_DSP_ECHO_FEEDBACK, 50);
+                system->playSound(sound, 0, false, &channel);
                 channel->addDSP(0, dsp);
+
                 break;
             case TYPE_TREMOLO:
                 system->createDSPByType(FMOD_DSP_TYPE_TREMOLO, &dsp);
                 dsp->setParameterFloat(FMOD_DSP_TREMOLO_SKEW, 0.8);
+                system->playSound(sound, 0, false, &channel);
                 channel->addDSP(0, dsp);
                 break;
             default:
@@ -103,6 +115,7 @@ extern "C" JNIEXPORT jint JNICALL Java_io_microshow_aisound_AiSound_saveSound
 
     } catch (...) {
         LOGE("%s", "发生异常");
+        code = 1;
         goto end;
     }
     system->update();
@@ -117,7 +130,7 @@ extern "C" JNIEXPORT jint JNICALL Java_io_microshow_aisound_AiSound_saveSound
     system->close();
     system->release();
 
-    return 1;
+    return code;
 
 }
 

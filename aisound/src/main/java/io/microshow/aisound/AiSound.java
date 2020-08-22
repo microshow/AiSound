@@ -53,6 +53,21 @@ public class AiSound {
     public static native void playSound(String path, int type);
 
     /**
+     * 异步播放
+     *
+     * @param path path
+     * @param type type
+     */
+    public static void playSoundAsync(String path, int type) {
+        new Thread(() -> {
+            if (isPlay()) {//是播放，先暂停
+                stopSound();
+            }
+            playSound(path, type);
+        }).start();
+    }
+
+    /**
      * 停止播放
      */
     public static native void stopSound();
@@ -83,5 +98,39 @@ public class AiSound {
      * @return 状态
      */
     public static native int saveSound(String inputSoundPath, String outputSoundPath, int type);
+
+    /**
+     * 异步保存音效
+     *
+     * @param inputSoundPath  输入路径
+     * @param outputSoundPath 输出路径
+     * @param type            音效类型
+     */
+    public static void saveSoundAsync(String inputSoundPath, String outputSoundPath, int type, IAiSoundListener mAiSoundListener) {
+        new Thread(() -> {
+            try {
+                int result = saveSound(inputSoundPath, outputSoundPath, type);
+                if (mAiSoundListener != null) {
+                    if (result == 0) {
+                        mAiSoundListener.onFinish(inputSoundPath, outputSoundPath, type);
+                    } else {
+                        mAiSoundListener.onError("error");
+                    }
+                }
+            } catch (Exception e) {
+                if (mAiSoundListener != null) {
+                    mAiSoundListener.onError(e.getMessage());
+                }
+            }
+        }).start();
+    }
+
+    public interface IAiSoundListener {
+        //成功
+        void onFinish(String inputSoundPath, String outputSoundPath, int type);
+
+        //出错
+        void onError(String msg);
+    }
 
 }

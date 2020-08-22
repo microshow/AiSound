@@ -1,12 +1,10 @@
 package io.microshow.aisoundapp;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import org.fmod.FMOD;
-
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import io.microshow.aisound.AiSound;
 
 /**
@@ -21,9 +19,8 @@ public class VoiceActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (!FMOD.checkInit()) {
-            FMOD.init(this);
-        }
+        //初始化AiSound
+        AiSound.init(this);
 
     }
 
@@ -88,8 +85,6 @@ public class VoiceActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (FMOD.checkInit()) {
-            FMOD.close();
-        }
+        AiSound.close();
     }
 }

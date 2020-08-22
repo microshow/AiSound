@@ -1,5 +1,9 @@
 package io.microshow.aisound;
 
+import android.content.Context;
+
+import org.fmod.FMOD;
+
 /**
  * AiSound
  */
@@ -19,6 +23,26 @@ public class AiSound {
     public static final int TYPE_ETHEREAL = 5;    // 空灵
     public static final int TYPE_CHORUS = 6;    //合唱团
     public static final int TYPE_TREMOLO = 7;    //颤音
+
+    /**
+     * init
+     *
+     * @param context context
+     */
+    public static void init(Context context) {
+        if (context != null && !FMOD.checkInit()) {
+            FMOD.init(context.getApplicationContext());
+        }
+    }
+
+    /**
+     * close
+     */
+    public static void close() {
+        if (FMOD.checkInit()) {
+            FMOD.close();
+        }
+    }
 
     /**
      * 播放音频

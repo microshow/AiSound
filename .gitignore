@@ -12,8 +12,8 @@ local.properties
 .gradle/
 
 # built application files
-*.apk
-*.ap_
+# *.apk
+# *.ap_
 
 # Signing files
 .signing/
@@ -61,3 +61,4 @@ ehthumbs.db
 fabric.properties
 
 .externalNativeBuild
+.cxx

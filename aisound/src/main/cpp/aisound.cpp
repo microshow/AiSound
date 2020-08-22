@@ -22,7 +22,7 @@ using namespace FMOD;
 
 Channel *channel;
 
-JNIEXPORT jint JNICALL Java_io_microshow_aisound_AiSound_saveSound
+extern "C" JNIEXPORT jint JNICALL Java_io_microshow_aisound_AiSound_saveSound
         (JNIEnv *env, jclass jcls, jstring path_jstr, jstring path2_jstr, jint type) {
 
     System *system;
@@ -121,7 +121,7 @@ JNIEXPORT jint JNICALL Java_io_microshow_aisound_AiSound_saveSound
 
 }
 
-JNIEXPORT void JNICALL Java_io_microshow_aisound_AiSound_playSound
+extern "C" JNIEXPORT void JNICALL Java_io_microshow_aisound_AiSound_playSound
         (JNIEnv *env, jclass jcls, jstring path_jstr, jint type) {
     LOGI("%s", "--> start");
 
@@ -219,7 +219,7 @@ JNIEXPORT void JNICALL Java_io_microshow_aisound_AiSound_playSound
 }
 
 
-JNIEXPORT void JNICALL Java_io_microshow_aisound_AiSound_stopSound
+extern "C" JNIEXPORT void JNICALL Java_io_microshow_aisound_AiSound_stopSound
         (JNIEnv *env, jclass jcls) {
     LOGI("%s", "--> start");
 
@@ -227,7 +227,7 @@ JNIEXPORT void JNICALL Java_io_microshow_aisound_AiSound_stopSound
 
 }
 
-JNIEXPORT void JNICALL Java_io_microshow_aisound_AiSound_resumeSound
+extern "C" JNIEXPORT void JNICALL Java_io_microshow_aisound_AiSound_resumeSound
         (JNIEnv *env, jclass jcls) {
     LOGI("%s", "--> start");
 
@@ -235,7 +235,7 @@ JNIEXPORT void JNICALL Java_io_microshow_aisound_AiSound_resumeSound
 
 }
 
-JNIEXPORT void JNICALL Java_io_microshow_aisound_AiSound_pauseSound
+extern "C" JNIEXPORT void JNICALL Java_io_microshow_aisound_AiSound_pauseSound
         (JNIEnv *env, jclass jcls) {
     LOGI("%s", "--> start");
 
@@ -243,7 +243,7 @@ JNIEXPORT void JNICALL Java_io_microshow_aisound_AiSound_pauseSound
 
 }
 
-JNIEXPORT jboolean JNICALL Java_io_microshow_aisound_AiSound_isPlay
+extern "C" JNIEXPORT jboolean JNICALL Java_io_microshow_aisound_AiSound_isPlay
         (JNIEnv *env, jclass jcls) {
     LOGI("%s", "--> start");
     bool isPlaying = true;

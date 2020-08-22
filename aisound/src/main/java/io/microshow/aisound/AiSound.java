@@ -109,6 +109,9 @@ public class AiSound {
     public static void saveSoundAsync(String inputSoundPath, String outputSoundPath, int type, IAiSoundListener mAiSoundListener) {
         new Thread(() -> {
             try {
+                if (isPlay()) {//是播放，先暂停
+                    stopSound();
+                }
                 int result = saveSound(inputSoundPath, outputSoundPath, type);
                 if (mAiSoundListener != null) {
                     if (result == 0) {
